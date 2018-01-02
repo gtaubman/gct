@@ -9,5 +9,6 @@ individual trades.
 ## TODO:
 
 - [ ] Support loading config files of colors and characters and layout.
+- [ ] Show UI when disconnected and countdown until reconnect.
 - [ ] Support scrolling the candlestick/volume view.
 - [ ] Other exchanges?
