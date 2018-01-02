@@ -8,6 +8,6 @@ individual trades.
 
 ## TODO:
 
-[ ] Support loading config files of colors and characters and layout.
-[ ] Support scrolling the candlestick/volume view.
-[ ] Other exchanges?
+- [ ] Support loading config files of colors and characters and layout.
+- [ ] Support scrolling the candlestick/volume view.
+- [ ] Other exchanges?
