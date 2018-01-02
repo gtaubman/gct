@@ -307,7 +307,8 @@ func Draw(trades []gdax.Message, buckets []*Bucket) {
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
 	printf_tb(0, 0, termbox.ColorWhite, termbox.ColorDefault,
-		"Crypto: %s   Fiat: %s   Exchange: GDAX   Candle Size: %s", *crypto, *fiat, shortDuration(*candleSize))
+		"Crypto: %s   Fiat: %s   Exchange: GDAX   Candle Size: %s",
+    strings.ToUpper(*crypto), strings.ToUpper(*fiat), shortDuration(*candleSize))
 
 	DrawTrades(tradeFrame, trades)
 	DrawCandles(candleFrame, buckets)
