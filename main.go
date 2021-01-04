@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+  "strconv"
 	"time"
 
 	ws "github.com/gorilla/websocket"
@@ -183,7 +184,8 @@ func DrawTrades(tradeFrame Frame, trades []gdax.Message) {
 			fg = termbox.ColorRed
 		}
 		fg |= termbox.AttrBold
-		tradeFrame.Printf(1, i, fg, bg, "%-4s %.2f", message.Side, message.Price)
+    price, _ := strconv.ParseFloat(message.Price, 64)
+		tradeFrame.Printf(1, i, fg, bg, "%-4s %.2f", message.Side, price)
 	}
 	tradeFrame.PrintHeader("Trades", termbox.ColorWhite, termbox.ColorDefault)
 }
@@ -263,11 +265,16 @@ func ProcessMessage(message gdax.Message, trades *[]gdax.Message, buckets *[]*Bu
 
 	t := message.Time.Time().Truncate(*candleSize)
 
+  price, err := strconv.ParseFloat(message.Price, 64)
+  if err != nil {
+    return
+  }
+
 	// If there are no buckets, start one.
 	if len(*buckets) == 0 {
 		*buckets = append(*buckets, &Bucket{
-			Open:     message.Price,
-			Close:    message.Price,
+			Open:     price,
+			Close:    price,
 			Start:    t,
 			Min:      math.MaxFloat32,
 			Max:      0.0,
@@ -277,12 +284,12 @@ func ProcessMessage(message gdax.Message, trades *[]gdax.Message, buckets *[]*Bu
 
 	bucket := (*buckets)[len(*buckets)-1]
 	if (*buckets)[len(*buckets)-1].Start.Equal(t) {
-		bucket.Close = message.Price
+		bucket.Close = price
 	} else {
 		// Time to start a new bucket.
 		*buckets = append(*buckets, &Bucket{
-			Open:     message.Price,
-			Close:    message.Price,
+			Open:     price,
+			Close:    price,
 			Start:    t,
 			Min:      math.MaxFloat32,
 			Max:      0.0,
@@ -291,8 +298,8 @@ func ProcessMessage(message gdax.Message, trades *[]gdax.Message, buckets *[]*Bu
 		bucket = (*buckets)[len(*buckets)-1]
 	}
 	bucket.Trades++
-	bucket.Max = math.Max(bucket.Max, message.Price)
-	bucket.Min = math.Min(bucket.Min, message.Price)
+	bucket.Max = math.Max(bucket.Max, price)
+	bucket.Min = math.Min(bucket.Min, price)
 }
 
 func Draw(trades []gdax.Message, buckets []*Bucket) {
