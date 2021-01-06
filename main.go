@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
-  "strconv"
 	"time"
 
 	ws "github.com/gorilla/websocket"
@@ -184,7 +184,7 @@ func DrawTrades(tradeFrame Frame, trades []gdax.Message) {
 			fg = termbox.ColorRed
 		}
 		fg |= termbox.AttrBold
-    price, _ := strconv.ParseFloat(message.Price, 64)
+		price, _ := strconv.ParseFloat(message.Price, 64)
 		tradeFrame.Printf(1, i, fg, bg, "%-4s %.2f", message.Side, price)
 	}
 	tradeFrame.PrintHeader("Trades", termbox.ColorWhite, termbox.ColorDefault)
@@ -265,10 +265,10 @@ func ProcessMessage(message gdax.Message, trades *[]gdax.Message, buckets *[]*Bu
 
 	t := message.Time.Time().Truncate(*candleSize)
 
-  price, err := strconv.ParseFloat(message.Price, 64)
-  if err != nil {
-    return
-  }
+	price, err := strconv.ParseFloat(message.Price, 64)
+	if err != nil {
+		return
+	}
 
 	// If there are no buckets, start one.
 	if len(*buckets) == 0 {
@@ -315,7 +315,7 @@ func Draw(trades []gdax.Message, buckets []*Bucket) {
 
 	printf_tb(0, 0, termbox.ColorWhite, termbox.ColorDefault,
 		"Crypto: %s   Fiat: %s   Exchange: GDAX   Candle Size: %s",
-    strings.ToUpper(*crypto), strings.ToUpper(*fiat), shortDuration(*candleSize))
+		strings.ToUpper(*crypto), strings.ToUpper(*fiat), shortDuration(*candleSize))
 
 	DrawTrades(tradeFrame, trades)
 	DrawCandles(candleFrame, buckets)
